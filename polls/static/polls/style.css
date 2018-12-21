@@ -2,6 +2,18 @@ li a {
     color: white
 }
 
+h1 {
+    color: white
+}
+
+form label { 
+    color: white
+}
+
+ul {
+    color: white
+}
+
 body {
     background: white url("images/background.gif") repeat
 }
