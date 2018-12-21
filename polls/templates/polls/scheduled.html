@@ -1,0 +1,11 @@
+{% if scheduled_question_list %}
+    <ul>
+    {% for question in scheduled_question_list %}
+        <li>{{ question.question_text }} (not clickable)</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+<a href="{% url 'polls:index' %}" >Home</a>

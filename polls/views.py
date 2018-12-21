@@ -6,6 +6,8 @@ from django.views import generic
 
 from .models import Choice, Question
 
+from django.utils import timezone
+
 # Create your views here.
 # def index(request):
 #     latest_question_list = Question.objects.order_by('-pub_date')[:5]
@@ -18,12 +20,40 @@ class IndexView(generic.ListView):
     context_object_name = 'latest_question_list'
 
     def get_queryset(self):
-        """Return the last five published questions"""
-        return Question.objects.order_by('-pub_date')[:5]
+        """
+        Return the last five published questions, excl
+        those to be published in the future
+
+        __lte means less then or equal to
+        """
+        return Question.objects.filter(
+            pub_date__lte = timezone.now()
+        ).order_by('-pub_date')[:5]
+
+class ScheduledView(generic.ListView):
+    template_name = 'polls/scheduled.html'
+    context_object_name = 'scheduled_question_list'
+
+    def get_queryset(self):
+        """
+        Return the first five upcoming scheduled questions
+
+        __gt means greater then
+        """
+        return Question.objects.filter(
+            pub_date__gt = timezone.now()
+        ).order_by('pub_date')[:5]
+
 
 class DetailView(generic.DetailView):
     model = Question
     template_name = 'polls/detail.html'
+
+    def get_queryset(self):
+        """
+        excl any q's that arent' published yet
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
 
 class ResultsView(generic.DetailView):
     model = Question
